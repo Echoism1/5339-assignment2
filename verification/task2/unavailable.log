@@ -1,0 +1,2 @@
+2026-10-21 03:34:24,257 WARNING broker unavailable; retrying with 1..30 second backoff
+2026-10-21 03:34:24,272 INFO STOP {"outcomes": {}, "failures": ["subscriber never received a successful QoS 1 SUBACK"], "db": "G:\\COMP5339\\5339-assignment2\\verification\\task2\\scratch\\1792514012161952300\\recovery.duckdb"}

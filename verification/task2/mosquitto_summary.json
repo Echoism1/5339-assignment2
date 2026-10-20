@@ -1,0 +1,7 @@
+{
+  "outcomes": {
+    "stored": 4
+  },
+  "failures": [],
+  "db": "verification\\task2\\scratch\\mosquitto\\test.duckdb"
+}

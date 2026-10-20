@@ -1,0 +1,7 @@
+{
+  "outcomes": {},
+  "failures": [
+    "subscriber never received a successful QoS 1 SUBACK"
+  ],
+  "db": "G:\\COMP5339\\5339-assignment2\\verification\\task2\\scratch\\1792514012161952300\\recovery.duckdb"
+}

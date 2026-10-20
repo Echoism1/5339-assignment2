@@ -1,4 +1,116 @@
-# COMP5339 Assignment 2 — Member 1
+# COMP5339 Assignment 2
+
+## Member 2 subscription delivery
+
+Member 2 implements the **group allocation's Task 2: Stream Gateway and
+Ingestion**. This corresponds to the subscription part of official assignment
+Task 3. Member 1 already implemented official Tasks 1 and 2. See
+[`docs/TASK2_GUIDE_ZH.md`](docs/TASK2_GUIDE_ZH.md) for the Chinese walkthrough,
+acceptance checklist and integration boundaries; the original producer handoff
+is preserved below.
+
+Use **Conda `ai312`, Python 3.12**. Checked on 21 October 2026 with Python
+3.12.14, paho-mqtt 2.1.0, DuckDB 1.5.6 and optional test broker amqtt 0.12.1.
+These were the latest stable versions returned by pip for these three packages
+during implementation. Versions are pinned for reproduction. amqtt's own
+dependencies may require older versions than their independently latest release.
+
+```powershell
+conda activate ai312
+Set-Location G:\COMP5339\5339-assignment2
+python -m pip install -r requirements.txt
+```
+
+New files:
+
+| Location | Purpose |
+|---|---|
+| `subscriber.py` | init/listen CLI, MQTT callbacks, bounded queue and single DB writer |
+| `ingestion/validation.py` | Strict UTF-8/JSON/type/range/hash/identity validation |
+| `ingestion/storage.py` | Real A1 database copy, mapping checks, durable dedup and quarantine |
+| `sql/ingestion.sql` | Additive tables and joined view inside A1's existing `core` schema |
+| `sql/a1_schema_reference.sql` | Unmodified original A1 full DDL reference; spatial setup required |
+| `compose.yaml`, `broker/mosquitto.conf` | Persistent loopback Mosquitto broker |
+| `database/assignment2.duckdb` | A1 database extended with actual MQTT-received window events |
+| `tools/dev_broker.py` | Optional loopback Python test/demo broker when Docker is unavailable |
+| `tools/review_member1.py` | Full original handoff inventory and reconstructed replay check |
+| `tools/verify_ingestion.py` | Read-only expected IDs/payloads/A1 join/order verification |
+| `tools/verify_a1_preserved.py` | Exact bidirectional comparison of every original A1 table |
+| `tools/test_mqtt_recovery.py`, `tests/` | Isolated MQTT recovery and contract tests |
+| `verification/task2/` | Current verification evidence; scratch databases excluded from Git |
+| `report_member2.md` | Report draft and truthful genAI disclosure guidance |
+
+Three terminals, started in this order:
+
+```powershell
+# 1. Production/demo broker; Docker Desktop must be running.
+docker compose up -d
+docker compose logs -f mqtt
+```
+
+If Docker is unavailable, use this tested alternative instead of the Docker
+broker (same port; do not start both):
+
+```powershell
+python -m pip install -r requirements-test.txt
+python tools/dev_broker.py
+```
+
+```powershell
+# 2. Subscriber. Wait for READY before publishing.
+python subscriber.py listen --summary verification/task2/local_summary.json
+```
+
+```powershell
+# 3. Existing producer; keep its original >=0.1-second delay.
+python publisher.py data/window.jsonl --host localhost --port 1883 --topic comp5339/TUT19-AssignmentGroup-08/events
+```
+
+Ctrl+C stops the subscriber and drains pending work. Stop it before read-only
+verification or before opening the DuckDB in another process:
+
+```powershell
+python tools/verify_ingestion.py
+```
+
+The included database already contains the replay. Publishing again is safe but
+produces **duplicates**, not fresh inserts. For a fresh demonstration, initialise
+a NEW database from the team's original closed/checkpointed A1 database; init
+refuses to overwrite an existing target. On this workstation the original is:
+
+```powershell
+python subscriber.py init --a1-db "G:/COMP5339/Assignment/COMP5339_Assignment1/COMP5339_Assignment1/database/ev_chargers.duckdb" --db database/fresh_demo.duckdb
+python subscriber.py listen --db database/fresh_demo.duckdb
+# After publishing and stopping the subscriber:
+python tools/verify_ingestion.py --db database/fresh_demo.duckdb --output verification/task2/fresh_demo_verification.json
+```
+
+For another workstation, substitute its own original A1 database path. The
+included final database can be used without that local path. DuckDB spatial
+queries and full A1 DDL rebuilds additionally require the A1 spatial extension
+setup; ingestion only reads A1 scalar keys, counts and coordinates.
+
+```powershell
+# Optional tests: the persistence/recovery tests need the original A1 DB.
+$env:A1_TEST_DB="G:/COMP5339/Assignment/COMP5339_Assignment1/COMP5339_Assignment1/database/ev_chargers.duckdb"
+python -m unittest discover -s tests -v
+python tools/test_mqtt_recovery.py --a1-db $env:A1_TEST_DB
+python tools/review_member1.py
+```
+
+Broker ACKs alone do not prove consumption. The supplied verification compares
+all 2,452 stored payloads against the publisher source after actual MQTT delivery.
+Member 3 still owns session state, historical analytics, final schema design and
+dashboard query optimisation; member 4 owns the live map and live curve. Their
+work is not claimed as complete by this subscription package.
+
+The only producer-code adjustment is its interval **measurement clock**, from
+`monotonic()` to `perf_counter()`: Python 3.12 on Windows can use a coarse
+monotonic clock, reporting 0.093 seconds around a real 0.1-second sleep.
+Publishing, source events, ACK handling and the minimum sleep are unchanged.
+The full replay was repeated after this adjustment; see the current publisher log.
+
+## Original member 1 handoff
 
 Tasks 1–2: data generation and MQTT publishing. Following the updated tutor FAQ
 (Q1–3), the submission uses **all 433 DC records for one day**, generating

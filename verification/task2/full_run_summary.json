@@ -1,0 +1,7 @@
+{
+  "outcomes": {
+    "stored": 2452
+  },
+  "failures": [],
+  "db": "database\\assignment2.duckdb"
+}

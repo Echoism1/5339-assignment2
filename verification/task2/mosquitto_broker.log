@@ -1,0 +1,14 @@
+mqtt-1  | chown: /mosquitto/config/mosquitto.conf: Read-only file system
+mqtt-1  | 1792514094: New connection from 172.19.0.1:37752 on port 1883.
+mqtt-1  | 1792514094: New client connected from 172.19.0.1:37752 as task2-mosquitto-smoke (p2, c0, k30).
+mqtt-1  | 1792514108: New connection from 172.19.0.1:57168 on port 1883.
+mqtt-1  | 1792514108: New client connected from 172.19.0.1:57168 as auto-DFDB84C7-AAC9-34C1-31D0-D99C3EEE1D5E (p2, c1, k60).
+mqtt-1  | 1792514108: Client auto-DFDB84C7-AAC9-34C1-31D0-D99C3EEE1D5E disconnected.
+mqtt-1  | 1792514112: Client task2-mosquitto-smoke disconnected.
+mqtt-1  | 1792514146: New connection from 172.19.0.1:59994 on port 1883.
+mqtt-1  | 1792514146: New client connected from 172.19.0.1:59994 as auto-54CC85DB-3200-8C15-DF2A-60BDCFC934FF (p2, c1, k60).
+mqtt-1  | 1792514146: Client auto-54CC85DB-3200-8C15-DF2A-60BDCFC934FF disconnected.
+mqtt-1  | chown: /mosquitto/config/mosquitto.conf: Read-only file system
+mqtt-1  | 1792514149: New connection from 172.19.0.1:60006 on port 1883.
+mqtt-1  | 1792514149: New client connected from 172.19.0.1:60006 as task2-mosquitto-smoke (p2, c0, k30).
+mqtt-1  | 1792514154: Client task2-mosquitto-smoke disconnected.

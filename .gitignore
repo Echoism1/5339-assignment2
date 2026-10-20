@@ -9,3 +9,5 @@ COMP5339_2026s2_Assignment2.pdf
 .aws/
 .env
 .env.*
+verification/task2/scratch/
+*.duckdb.wal
