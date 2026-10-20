@@ -1,0 +1,15 @@
+{
+  "start": "2026-09-01T00:00:00+10:00",
+  "end": "2026-09-01T03:00:00+10:00",
+  "hours": 3.0,
+  "stations": 433,
+  "counts": {
+    "price_update": 433,
+    "session_start": 71,
+    "meter": 1886,
+    "session_end": 62
+  },
+  "total": 2452,
+  "sha256": "607e637a57df7160f5c98d6cf0057dc141e6af7eb2a2c902ba0156bb458fc00d",
+  "minimum_replay_seconds": 245.10000000000002
+}

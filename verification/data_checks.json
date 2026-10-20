@@ -1,0 +1,50 @@
+{
+  "stations": 433,
+  "ac": 0,
+  "dc": 433,
+  "connectors": 1658,
+  "assumption_rows": 6,
+  "hourly_prices": 10392,
+  "sessions": 3906,
+  "meters": 118030,
+  "zero_session_stations": [
+    "124",
+    "270",
+    "352",
+    "921",
+    "959",
+    "969"
+  ],
+  "zero_session_explanation": "Stochastic arrivals over one day; no sessions were fabricated.",
+  "cross_day_sessions": 30,
+  "sessions_ending_after_generation": 30,
+  "window_events": 2452,
+  "window_active_sessions_at_end": 9,
+  "window_matches_source": true,
+  "event_ids_reproducible": true,
+  "full_generation_reproducible": true,
+  "a1_snapshot_matches_original": true,
+  "generation": {
+    "start": "2026-09-01",
+    "days": 1,
+    "seed": 5339,
+    "region": "NSW1",
+    "meter_every": 1,
+    "sessions_per_connector_day": [
+      3,
+      2
+    ]
+  },
+  "sha256": {
+    "data/a1_chargers.csv": "44c0c71c8f8c3a5885c09f5e3a585b7c68881e2230554274072894fbbfebbe6b",
+    "data/aemo_cache/PRICE_AND_DEMAND_202609_NSW1.csv": "85af3e1f68823c3eef87fcc98e5fa605c609b568ec64d6ef36b96722f8db8cd0",
+    "data/assumptions.csv": "bf70976e8fada0dde0f9eaf28d97fc87d13c1feae6b21f5caa8dd564303c703e",
+    "data/prices_hourly.csv": "fd639163b8740eb95dd0364dbec2348d8812d752e13dd197df8c546350852019",
+    "data/session_metering.csv": "f22366544b0210b704421b05b84da7167eb1eea568bc5edc00be258d49426a43",
+    "data/sessions.csv": "b4b3e59e81d4220c80b99ec39b0e2f7094f76d9ba66c92021735d0648bd0a201",
+    "data/stations.csv": "9ea1a1a339ddcd9e5c4b5de42cd2b6c1f4b7a3a937262fd0ce4755e6fca68557",
+    "data/stations_input.csv": "f2d179e612e7d8404dc222e8314bb929bb53cb7f0965cb09c93912cb77697e48",
+    "data/window.jsonl": "607e637a57df7160f5c98d6cf0057dc141e6af7eb2a2c902ba0156bb458fc00d",
+    "data/window_summary.json": "41c11ea658ecbcaf62a44a5c77813a4450673f567fb16f6c8f187c7dc4daec76"
+  }
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+backups/
+*.zip
+__MACOSX/
+COMP5339_2026s2_Assignment2.pdf
+.agents/
+.codex/
+.aws/
+.env
+.env.*

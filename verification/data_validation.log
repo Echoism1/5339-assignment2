@@ -1,0 +1,38 @@
+{
+  "stations": 433,
+  "ac": 0,
+  "dc": 433,
+  "connectors": 1658,
+  "assumption_rows": 6,
+  "hourly_prices": 10392,
+  "sessions": 3906,
+  "meters": 118030,
+  "zero_session_stations": [
+    "124",
+    "270",
+    "352",
+    "921",
+    "959",
+    "969"
+  ],
+  "zero_session_explanation": "Stochastic arrivals over one day; no sessions were fabricated.",
+  "cross_day_sessions": 30,
+  "sessions_ending_after_generation": 30,
+  "window_events": 2452,
+  "window_active_sessions_at_end": 9,
+  "window_matches_source": true,
+  "event_ids_reproducible": true,
+  "full_generation_reproducible": true,
+  "a1_snapshot_matches_original": true,
+  "generation": {
+    "start": "2026-09-01",
+    "days": 1,
+    "seed": 5339,
+    "region": "NSW1",
+    "meter_every": 1,
+    "sessions_per_connector_day": [
+      3,
+      2
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+433 stations, 10392 hourly prices, 3906 charging-sessions, 118030 meter-events -> data/
+  urban    mean  31.7 min /  25.2 kWh   (ARENA 2023: 27.3 min / 27.0 kWh)
+  regional mean  27.8 min /  25.6 kWh   (ARENA 2023: 25.9 min / 24.5 kWh)
+  price $/kWh min 0.39  mean 0.67  max 0.93

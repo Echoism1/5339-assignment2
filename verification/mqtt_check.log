@@ -1,0 +1,14 @@
+{
+  "source_sha256": "607e637a57df7160f5c98d6cf0057dc141e6af7eb2a2c902ba0156bb458fc00d",
+  "received": 2452,
+  "unique_received": 2452,
+  "content_and_order_match": true,
+  "qos": 1,
+  "retained_messages": 0,
+  "connection_refusal_checked": true,
+  "confirmed": 2452,
+  "last_event_id": "9d3e0f3cd5f92f4930fa518ffe55ac8d38e1d1b7bad2355242dc1a72de333ffb",
+  "min_interval_seconds": 0.10072270299997399,
+  "duckdb_integration": "Not tested: members 2/3 implementations not supplied"
+}
+Unavailable broker: Stopped: [Errno 111] Connection refused; confirmed=0; last_event_id=None

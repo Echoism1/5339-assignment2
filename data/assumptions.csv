@@ -1,0 +1,7 @@
+ev_id,charger_type,original_rating,max_kw,reason
+1036,DC,50,50.0,Numeric rating without unit: retain A1 kW interpretation
+1050,DC,2x350kW & 2x175kW,350.0,Mixed ratings: use A1 maximum for each simulated connector
+1062,DC,2x350kW & 2x175kW,350.0,Mixed ratings: use A1 maximum for each simulated connector
+1076,DC,2x350kW & 2x175kW,350.0,Mixed ratings: use A1 maximum for each simulated connector
+1087,DC,2x350kW & 2x175kW,350.0,Mixed ratings: use A1 maximum for each simulated connector
+1089,DC,2x350kW & 2x175kW,350.0,Mixed ratings: use A1 maximum for each simulated connector
