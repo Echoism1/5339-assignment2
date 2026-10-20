@@ -8,18 +8,19 @@
 |---|---|
 | 队友 main 全部文件 | 32 个原始文件清单、完整 CSV 解析、事件重建；`member1_review.json` |
 | 正式全量 MQTT 回放 | 2,452 条；原发布器；不是 JSONL 直接导入数据库 |
-| 最小发布间隔 | 高精度实测 0.1003709 秒；`full_publisher.log` |
+| 最小发布间隔 | 本轮高精度实测 0.1004622 秒；`audit_full_publisher.log` |
 | 每条数据内容 | ID 和 payload 全部相等，接收顺序与源一致；`full_verification.json` |
 | 事件数量 | price 433、start 71、meter 1,886、end 62；无源事件被拒收 |
 | A1 关联 | 每条 `station_id` 与真实 `ev_id` 一致，全部可关联原站点 |
 | A1 保留 | 原有 11 张表双向 EXCEPT ALL 差异均为零；`a1_preservation.json` |
-| 契约与存储单元测试 | 5 组通过，包含全量 2,452 条契约检查、异常字段、重启去重、真实 FK |
+| 契约与存储单元测试 | 本轮 8 项通过，包含全量 2,452 条契约检查、异常字段、重启去重、真实 FK、非法 Unicode 和带时区时间读取 |
 | 消息故障恢复 | 错 topic、重复、畸形、retained、broker 重启、subscriber 重启；`recovery_verification.json` |
 | 队列溢出 | 测试时人为延迟 writer，触发有界队列报错停止；重放后数据完整 |
 | Broker 不可用 | 明确报重试，限时测试未获得 SUBACK 时返回失败；`unavailable_summary.json` |
 | Mosquitto 实测 | Docker Compose 配置启动成功；四种事件均经过 MQTT 入库；`mosquitto_verification.json` |
 | Mosquitto 离线队列 | 离线发布四条，重启 broker 后用同一 client ID 补送，均正确去重；`mosquitto_offline_recovery.json` |
-| 环境依赖 | ai312 Python 3.12.14；pip check 无损坏依赖 |
+| 环境依赖 | Python 3.12.14；全新虚拟环境仅安装 requirements.txt 后 8 项测试通过；pip check 无损坏依赖 |
+| 下一位同学的查询 | `sql/handoff_queries.sql` 四项示例实测 433、9、433、1,886 行，完成会话合计 62 |
 | 文档与源码 | 提供 README、中文交接、报告草稿、DDL、验证工具；语法编译及 git diff 检查 |
 
 证据文件位于 `verification/task2/`。正式库保留所有 1,958 个 A1 站点，其中 433 个 DC 站点收到初始价格；回放末 9 个会话保持活跃。独立故障测试数据库位于 Git 排除的 scratch 中，不污染正式库。
@@ -32,6 +33,18 @@
 4. ACK 线程与重连可能同时访问连接状态；增加连接锁，防止旧连接 packet ID 被错误确认到新连接。
 5. 未成功订阅的限时运行原本可能返回成功；现在检测从未收到 QoS 1 SUBACK，并返回失败。
 6. 退出时如果写入队列无法排空，使用有限等待并报告失败；不无限等待队列槽位。
+7. 本轮复核发现 JSON 可转义非法 Unicode 代理字符，原来会导致 writer 停止；已改为隔离，并通过真实 MQTT 异常消息测试。
+8. 本轮复核发现 Python 获取 DuckDB TIMESTAMPTZ 需要 pytz；已加入 requirements.txt，并在全新虚拟环境验证时间列获取和全部单元测试。
+
+## 本轮评分对照与交接复核
+
+本轮重新读取作业说明、FAQ 和评分标准，并重新执行测试，不仅沿用先前记录。与成员 2 直接对应的 **MQTT Data Subscription / Excellent (10 分)** 要求是正确订阅和解码、在同一 schema 正确关联 A1 站点。本实现以 broker 实际接收、严格解码、`core.mqtt_event` 外键及完整 payload 对比提供证据。当前已执行检查未发现该接收范围内未解决的阻断问题；最终分数仍由老师评定。
+
+存储分析 20 分和仪表盘 20 分属于全组后续集成，当前 inbox、外键和初步索引不能单独证明这两项达到 Excellent。成员 3 必须完成状态模型、历史指标、实际查询的物理设计评估；成员 4 必须完成动态地图、详细弹窗和活跃会话实时曲线。报告与代码质量也是全组评分，需以最终整合交付评估。
+
+README 已增加成员 3 的表字段输入契约、完整的交接 SQL、已填充 inbox 的派生回填要求、事务与 ACK 顺序、按事件时间与连接器维护状态的规则，以及成员 3/4 的六项共同验收清单。没有将尚未实现的实时 API 或地图写成已经完成。
+
+本轮证据：`audit_unit_tests.log`、`audit_clean_install.log`、`audit_clean_tests.log`、`audit_recovery.log`、`audit_packaged_database.json`、`audit_a1_preservation.log`、`handoff_query_verification.json`；全新 A1 副本的 MQTT 回放另见 `audit_full_verification.json`、`audit_full_summary.json` 和配套日志。此前 Mosquitto 测试记录仍是此前部署测试，本轮没有启动 Docker。
 
 ## 明确边界与待全组联调
 

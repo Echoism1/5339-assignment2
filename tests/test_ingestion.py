@@ -7,6 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import duckdb
+
 from ingestion.storage import ROOT, Store
 from ingestion.validation import InvalidEvent, canonical, decode
 
@@ -54,6 +56,20 @@ class ContractTests(unittest.TestCase):
     def test_negative_wholesale_allowed(self):
         self.assertEqual(decode(signed(dict(self.events[0], wholesale_per_kwh=-0.1)), self.stations)['wholesale_per_kwh'], -0.1)
 
+    def test_escaped_invalid_unicode_is_quarantinable(self):
+        event = dict(next(e for e in self.events if e['type'] == 'session_start'))
+        event['vehicle_model'] = '\ud800'
+        event['event_id'] = '0' * 64
+        payload = json.dumps(event, ensure_ascii=True).encode('utf-8')
+        with self.assertRaisesRegex(InvalidEvent, 'invalid Unicode'):
+            decode(payload, {event['station_id']: 100})
+
+    def test_unplug_cannot_precede_charge_completion(self):
+        event = next(e for e in self.events if e['type'] == 'session_end')
+        bad = dict(event, charge_end_ts='2099-01-01T00:00:00+10:00')
+        with self.assertRaisesRegex(InvalidEvent, 'completion is after unplugging'):
+            decode(signed(bad), {event['station_id']: 100})
+
 
 class PersistenceTests(unittest.TestCase):
     def test_durable_dedup_quarantine_and_fk(self):
@@ -72,6 +88,10 @@ class PersistenceTests(unittest.TestCase):
                 self.assertEqual(store.receive('test/events', b'\xff'), 'rejected')
                 self.assertEqual(store.receive('test/events', payload, retained=True), 'rejected')
                 self.assertEqual(store.receive('test/events', payload, qos=0), 'rejected')
+                source_events = (json.loads(line) for line in (ROOT / 'data/window.jsonl').read_text(encoding='utf-8').splitlines())
+                bad_text = dict(next(e for e in source_events if e['type'] == 'session_start'),
+                                vehicle_model='\ud800', event_id='0' * 64)
+                self.assertEqual(store.receive('test/events', json.dumps(bad_text).encode()), 'rejected')
                 raw = store.db.execute('select payload_base64 from core.mqtt_rejection where reason like ?',['JSON decoding:%']).fetchone()[0]
                 self.assertEqual(base64.b64decode(raw), b'\xff')
                 with self.assertRaises(Exception):
@@ -79,7 +99,14 @@ class PersistenceTests(unittest.TestCase):
             with Store(target) as reopened:
                 self.assertEqual(reopened.receive('test/events', payload), 'duplicate')
                 self.assertEqual(reopened.db.execute('select count(*) from core.mqtt_event').fetchone()[0], 1)
-                self.assertEqual(reopened.db.execute('select count(*) from core.mqtt_rejection').fetchone()[0], 3)
+                self.assertEqual(reopened.db.execute('select count(*) from core.mqtt_rejection').fetchone()[0], 4)
+
+
+class TimestampQueryTests(unittest.TestCase):
+    def test_timezone_aware_timestamp_can_be_fetched(self):
+        with duckdb.connect(':memory:') as connection:
+            value = connection.execute("SELECT TIMESTAMPTZ '2026-09-01T00:00:00+10:00'").fetchone()[0]
+        self.assertIsNotNone(value.utcoffset())
 
 
 if __name__ == '__main__':

@@ -85,9 +85,11 @@ def main():
         publish(port, topic, [events[0]], retain=True)
         s = listen(12, 'first')
         publish(port, topic, [''], retain=True)  # clear the retained broker slot
-        publish(port, topic, events[:10] + events[:10] + ['{bad', '\u00e9'])
+        invalid_unicode = dict(next(json.loads(e) for e in events if json.loads(e)['type'] == 'session_start'),
+                               vehicle_model='\ud800', event_id='0' * 64)
+        publish(port, topic, events[:10] + events[:10] + ['{bad', '\u00e9', json.dumps(invalid_unicode)])
         publish(port, topic + '/wrong', events[10:15])
-        wait_for(lambda: (run / 'first.log').read_text(encoding='utf-8').count('quarantined') >= 4)
+        wait_for(lambda: (run / 'first.log').read_text(encoding='utf-8').count('quarantined') >= 5)
         b.terminate()
         b.wait(10)
         b = broker()  # Broker session is gone; on_connect must resubscribe.
@@ -97,7 +99,7 @@ def main():
         first = json.loads((run / 'first.json').read_text())
         assert first['outcomes'].get('stored') == 20, first
         assert first['outcomes'].get('duplicate') == 10, first
-        assert first['outcomes'].get('rejected', 0) >= 3, first
+        assert first['outcomes'].get('rejected', 0) >= 5, first
         # Restart subscriber against the SAME committed DB and replay duplicates.
         s = listen(4, 'second')
         publish(port, topic, events[:20])
@@ -129,6 +131,7 @@ def main():
             assert {r[0]: json.loads(r[1]) for r in rows} == {json.loads(e)['event_id']: json.loads(e) for e in events[:40]}
         result = dict(passed=True, first=first['outcomes'], second=second['outcomes'],
                       checks=['retained quarantine', 'malformed quarantine', 'wrong topic ignored',
+                              'escaped invalid Unicode quarantined without writer failure',
                               'QoS 1 duplicates', 'broker restart and resubscription',
                               'subscriber restart and durable dedup', 'exact saved payloads',
                               'bounded queue overflow fails visibly', 'replay after overflow recovers all events'],

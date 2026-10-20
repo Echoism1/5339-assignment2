@@ -92,6 +92,12 @@ def decode(payload, stations):
     if not isinstance(identity, str) or not re.fullmatch('[0-9a-f]{64}', identity):
         raise InvalidEvent('invalid event_id')
     content = {k: v for k, v in event.items() if k != 'event_id'}
-    if hashlib.sha256(canonical(content).encode('utf-8')).hexdigest() != identity:
+    try:
+        digest = hashlib.sha256(canonical(content).encode('utf-8')).hexdigest()
+    except UnicodeError as exc:
+        # JSON can escape a lone surrogate even though it cannot represent a
+        # Unicode scalar value. Quarantine it rather than stopping the writer.
+        raise InvalidEvent('payload contains invalid Unicode') from exc
+    if digest != identity:
         raise InvalidEvent('event_id does not match payload SHA-256')
     return event

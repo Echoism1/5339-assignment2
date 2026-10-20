@@ -1,0 +1,13 @@
+test_connector_and_soc (test_ingestion.ContractTests.test_connector_and_soc) ... ok
+test_escaped_invalid_unicode_is_quarantinable (test_ingestion.ContractTests.test_escaped_invalid_unicode_is_quarantinable) ... ok
+test_every_producer_payload (test_ingestion.ContractTests.test_every_producer_payload) ... ok
+test_invalid_wire_messages (test_ingestion.ContractTests.test_invalid_wire_messages) ... ok
+test_negative_wholesale_allowed (test_ingestion.ContractTests.test_negative_wholesale_allowed) ... ok
+test_unplug_cannot_precede_charge_completion (test_ingestion.ContractTests.test_unplug_cannot_precede_charge_completion) ... ok
+test_durable_dedup_quarantine_and_fk (test_ingestion.PersistenceTests.test_durable_dedup_quarantine_and_fk) ... ok
+test_timezone_aware_timestamp_can_be_fetched (test_ingestion.TimestampQueryTests.test_timezone_aware_timestamp_can_be_fetched) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.237s
+
+OK

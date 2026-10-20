@@ -226,9 +226,12 @@ analytics and dashboard still require integration by members 3 and 4.
 ### Requirements and setup
 
 **Python 3.12 is recommended.** The implementation was verified with Python
-3.12.14, paho-mqtt 2.1.0 and DuckDB 1.5.6. Runtime dependencies are pinned in
+3.12.14, paho-mqtt 2.1.0, DuckDB 1.5.6 and pytz 2026.5. Runtime dependencies are pinned in
 `requirements.txt`; no particular environment manager or environment name is
 required.
+
+`pytz` supports fetching DuckDB timezone-aware timestamps into Python, including
+the event-time columns used by the handoff query examples.
 
 Run all commands from the repository root. Use an existing Python 3.12 virtual
 environment, or create one:
@@ -265,6 +268,7 @@ rebuilding `data/window.jsonl` is not required for these instructions.
 | `subscriber.py` | init/listen CLI, MQTT callbacks, bounded queue and single database writer |
 | `ingestion/` | Event validation, A1 identity checks, durable deduplication and quarantine |
 | `sql/ingestion.sql` | Additive event/rejection tables and joined view in A1's `core` schema |
+| `sql/handoff_queries.sql` | Executable read-only examples for current price, active sessions, history and meter curves |
 | `sql/a1_schema_reference.sql` | Original A1 DDL reference; rebuilding it requires the spatial extension |
 | `database/assignment2.duckdb` | A1 database extended with the 2,452 events already received through MQTT |
 | `tools/dev_broker.py` | Optional Python MQTT broker for local testing and demonstrations |
@@ -445,6 +449,91 @@ dashboard needs an agreed shared-service or read-snapshot design; it cannot simp
 open the file while a separate subscriber process holds its write lock. Members
 3 and 4 still own session state, historical analytics, final query optimisation,
 the map and live session curves.
+
+### Handoff to member 3 Storage and analytics
+
+**Start from the included A2 database and the committed MQTT inbox, not from a
+new station table or a direct bulk import of `window.jsonl`.** The original A1
+tables and their keys are retained. `core.mqtt_event.ev_id` references
+`core.charger_record.ev_id` in the same database and schema.
+
+The ingestion output contract is:
+
+| Column/object | Contract |
+|---|---|
+| `core.mqtt_event.event_id` | VARCHAR primary key; stable producer SHA-256, one row per unique event |
+| `ev_id` | BIGINT foreign key to the original A1 charger; wire `station_id` is its string form |
+| `event_type` | `price_update`, `session_start`, `meter` or `session_end` |
+| `event_ts` | TIMESTAMPTZ; use for event ordering and analytical state |
+| `session_id`, `connector_id` | Session key and connector number; NULL for price events |
+| `payload` | JSON with all original event fields and units, as documented in the producer contract above |
+| `received_at` | TIMESTAMPTZ ingestion time; useful for auditing, not a replacement for event time |
+| `topic` | Actual subscribed topic used for this delivery |
+| `core.mqtt_rejection` | Quarantined bytes encoded in Base64, reason, topic and reception time; exclude from analytics |
+| `core.mqtt_charger_events` | Inbox joined to A1 name, address, coordinates, type, connector count, operator ID and SA4 code |
+
+Extend this schema with the session/state tables, views and dashboard queries you
+need. Keep A1 identifiers and `event_id` deduplication. If deriving state during
+ingestion, add it in the writer's processing path in `ingestion/storage.py` and
+commit the inbox insert and all derived updates in **one transaction before the
+existing writer acknowledges the MQTT message**. Do not implement the state
+update after ACK or let a second process independently write this same file.
+For an already populated inbox, derive state from its committed rows and then
+continue incrementally; replay alone will return duplicates and skip new inserts.
+
+Use `sql/handoff_queries.sql` as executable read-only examples after stopping the
+subscriber. It demonstrates latest received prices, active sessions, completed
+session counts and meter-curve fields. Its queries have been checked against the
+included replay. They are a starting point, not a completed analytical service or
+proof that these indexes optimise the final dashboard workload.
+
+Important state rules:
+
+- Order by event time, not arrival time. Use the producer's documented tie order
+  for chronological replay: price, meter, session end, session start. A late or
+  duplicate event must not overwrite newer state incorrectly.
+- Track occupancy by connector/session, not a single station boolean: a station
+  can host several simultaneous sessions. Release a connector at `session_end`
+  (unplugging), not at `charge_end_ts` or the final meter reading.
+- `meter.energy_kwh` is cumulative within a session. Plot or take the latest
+  reading; never sum meter readings. Prices are AUD/kWh and costs are AUD.
+- The replay ends with nine sessions still active; preserve them. A different
+  replay starting mid-session requires an explicit policy for unknown initial
+  state or missing starts. Do not fabricate history or endings.
+- Keep all 433 simulated DC stations in station-level results, including those
+  without sessions. Dynamic values for unsimulated AC/Upcoming records are
+  unknown, not zero. Metrics describe the received window, not the generated day.
+
+Before handing your storage component to member 4, agree on a live read interface.
+The recommended arrangement is one service process owning ingestion and derived
+state, with separate connections in its query threads and an API for the frontend.
+An atomically published read snapshot is another option. This repository does
+**not** yet implement either interface. Merely stopping the subscriber to run
+queries is useful for inspection but does not satisfy a live dashboard.
+
+### Member 3 and member 4 joint acceptance checklist
+
+After integrating their components, run a fresh database replay through MQTT and
+confirm:
+
+1. All 2,452 unique event IDs and payloads match `data/window.jsonl`; type counts
+   are 433 prices, 71 starts, 1,886 meters and 62 ends, with zero rejected source
+   messages. Replaying again must not inflate events, sessions or derived metrics.
+2. All original A1 data remain intact; every received charger matches its A1 key.
+   Session state shows nine active sessions at the final window boundary.
+3. The dashboard provides at least one current-state metric and one historical
+   metric from stored received events. A simple example is current price/active
+   sessions plus completed-session count; other justified choices are allowed.
+4. The map keeps correct A1 positions and charger details, changes dynamically as
+   events arrive, and supports working marker pop-ups. A currently active session
+   has a live-updated meter curve. Do not invent price changes in this window.
+5. The frontend can read while ingestion continues, without DuckDB process-lock
+   errors. Check the actual dashboard queries, document any physical design
+   changes and capture the running dashboard for the report.
+6. Include the final extended DuckDB, all new DDL, code/dependencies, generated
+   inputs/outputs and replay events in the final package. Merge the report drafts
+   within the six-page content limit and complete truthful contribution and genAI
+   declarations. These are group acceptance steps, not completed member 2 tests.
 
 The producer's only code adjustment is its interval measurement clock, from
 `monotonic()` to `perf_counter()`, to avoid coarse timing measurements on

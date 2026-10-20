@@ -34,7 +34,8 @@ charger/time and session/time indexes provide initial lookup support. Final
 stateful analytics and physical-design evaluation belong to the storage component.
 
 Validation replays the complete 2,452-message window through a local MQTT broker
-using the unmodified publisher and its minimum 0.1-second delay. The read-only
+using the publisher's unchanged event and acknowledgement logic and its minimum
+0.1-second delay (the measurement clock was updated as documented). The read-only
 verifier compares every stored event ID and decoded payload with the source,
 checks arrival order, type counts and A1 associations, and counts active sessions.
 Separate broker tests cover malformed and retained-message quarantine, wrong-topic

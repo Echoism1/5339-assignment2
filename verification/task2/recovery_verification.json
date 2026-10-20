@@ -1,7 +1,7 @@
 {
   "passed": true,
   "first": {
-    "rejected": 4,
+    "rejected": 5,
     "stored": 20,
     "duplicate": 10
   },
@@ -12,6 +12,7 @@
     "retained quarantine",
     "malformed quarantine",
     "wrong topic ignored",
+    "escaped invalid Unicode quarantined without writer failure",
     "QoS 1 duplicates",
     "broker restart and resubscription",
     "subscriber restart and durable dedup",
@@ -19,5 +20,5 @@
     "bounded queue overflow fails visibly",
     "replay after overflow recovers all events"
   ],
-  "scratch": "verification\\task2\\scratch\\1792514012161952300"
+  "scratch": "verification\\task2\\scratch\\1792516407019292400"
 }
