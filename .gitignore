@@ -11,3 +11,7 @@ COMP5339_2026s2_Assignment2.pdf
 .env.*
 verification/task2/scratch/
 *.duckdb.wal
+
+# Personal Chinese study notes; the English README contains the team handoff.
+/docs/TASK2_GUIDE_ZH.md
+/docs/TASK2_REVIEW.md
