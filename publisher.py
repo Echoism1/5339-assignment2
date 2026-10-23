@@ -32,7 +32,9 @@ def publish(path, host, port, topic):
         with path.open(encoding="utf-8") as f:
             for line in f:
                 event_id = json.loads(line)["event_id"]
-                now = time.monotonic()
+                # perf_counter has sub-millisecond resolution on Windows/Python 3.12;
+                # monotonic may use coarse GetTickCount64 and under-report a 0.1s gap.
+                now = time.perf_counter()
                 if previous is not None:
                     gap = now - previous
                     min_gap = gap if min_gap is None else min(min_gap, gap)

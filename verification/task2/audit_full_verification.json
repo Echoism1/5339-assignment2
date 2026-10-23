@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "source_ids_unique": true,
+    "all_ids_and_payloads_equal": true,
+    "all_event_ids_join_a1": true,
+    "all_ev_ids_match_wire_station_ids": true,
+    "arrival_order_matches_source": true,
+    "event_type_counts_match": true,
+    "no_rejected_source_events": true
+  },
+  "passed": true,
+  "events": 2452,
+  "counts": {
+    "session_end": 62,
+    "session_start": 71,
+    "price_update": 433,
+    "meter": 1886
+  },
+  "a1_chargers": 1958,
+  "chargers_with_received_price": 433,
+  "active_sessions_at_window_end": 9,
+  "rejected": 0,
+  "source_sha256": "607e637a57df7160f5c98d6cf0057dc141e6af7eb2a2c902ba0156bb458fc00d",
+  "database_sha256": "8e9e91ed522485cd2059d2d4e770f13fa7bf39afd96b5e63a884774f535b4624",
+  "fresh_database": true,
+  "broker": "amqtt 0.12.1; loopback port 18886; Docker not used",
+  "scratch": "verification\\task2\\scratch\\audit_1792516268659990400"
+}

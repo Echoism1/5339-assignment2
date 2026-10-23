@@ -1,0 +1,14 @@
+{
+  "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:37:13) [MSC v.1942 64 bit (AMD64)]",
+  "executable": "C:\\Users\\18054\\.conda\\envs\\ai312\\python.exe",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "packages": {
+    "duckdb": "1.5.6",
+    "paho-mqtt": "2.1.0",
+    "amqtt": "0.12.1",
+    "websockets": "15.0.1"
+  },
+  "pip_check": "No broken requirements found.",
+  "full_replay_broker": "amqtt 0.12.1 on loopback port 18883",
+  "production_broker_smoke": "eclipse-mosquitto:2.0.22 via Docker Compose, loopback port 1883"
+}

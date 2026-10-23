@@ -1,0 +1,2 @@
+2026-10-21 03:35:49,608 INFO READY topic=comp5339/smoke/events qos=1 client_id=task2-mosquitto-smoke
+2026-10-21 03:35:54,740 INFO STOP {"outcomes": {"duplicate": 4}, "failures": [], "db": "verification\\task2\\scratch\\mosquitto\\test.duckdb"}

@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "first": {
+    "rejected": 5,
+    "stored": 20,
+    "duplicate": 10
+  },
+  "second": {
+    "duplicate": 20
+  },
+  "checks": [
+    "retained quarantine",
+    "malformed quarantine",
+    "wrong topic ignored",
+    "escaped invalid Unicode quarantined without writer failure",
+    "QoS 1 duplicates",
+    "broker restart and resubscription",
+    "subscriber restart and durable dedup",
+    "exact saved payloads",
+    "bounded queue overflow fails visibly",
+    "replay after overflow recovers all events"
+  ],
+  "scratch": "verification\\task2\\scratch\\1792516407019292400"
+}

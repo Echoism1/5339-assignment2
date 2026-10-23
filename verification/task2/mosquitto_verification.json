@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "source_ids_unique": true,
+    "all_ids_and_payloads_equal": true,
+    "all_event_ids_join_a1": true,
+    "all_ev_ids_match_wire_station_ids": true,
+    "arrival_order_matches_source": true,
+    "event_type_counts_match": true,
+    "no_rejected_source_events": true
+  },
+  "passed": true,
+  "events": 4,
+  "counts": {
+    "session_end": 1,
+    "meter": 1,
+    "price_update": 1,
+    "session_start": 1
+  },
+  "a1_chargers": 1958,
+  "chargers_with_received_price": 1,
+  "active_sessions_at_window_end": 1,
+  "rejected": 0,
+  "source_sha256": "31e2abfffb15ce51721a9dd53dad8c180de720f4aedb8381a350672aae47cf83",
+  "database_sha256": "0f0d2528c265621a4c5acb721947e027cc8883748d4656b62564f4749c2e5203"
+}

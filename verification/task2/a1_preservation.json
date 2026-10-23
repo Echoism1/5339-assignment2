@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "original_file_unchanged": true,
+  "original_sha256": "0a216fe55fd1f1139c3bacf6d5c30144e1cbeaf0c4511b0c2ab1ac9c6c80446a",
+  "original_tables": [
+    {
+      "table": "audit.build_metadata",
+      "differences": 0,
+      "rows": 6
+    },
+    {
+      "table": "audit.input_snapshot",
+      "differences": 0,
+      "rows": 1958
+    },
+    {
+      "table": "core.attribute_evidence",
+      "differences": 0,
+      "rows": 798
+    },
+    {
+      "table": "core.charger_plug",
+      "differences": 0,
+      "rows": 158
+    },
+    {
+      "table": "core.charger_record",
+      "differences": 0,
+      "rows": 1958
+    },
+    {
+      "table": "core.dc_augmentation",
+      "differences": 0,
+      "rows": 433
+    },
+    {
+      "table": "core.dc_connection",
+      "differences": 0,
+      "rows": 328
+    },
+    {
+      "table": "core.operator",
+      "differences": 0,
+      "rows": 42
+    },
+    {
+      "table": "core.operator_profile",
+      "differences": 0,
+      "rows": 9
+    },
+    {
+      "table": "core.plug_type",
+      "differences": 0,
+      "rows": 2
+    },
+    {
+      "table": "core.sa4_region",
+      "differences": 0,
+      "rows": 30
+    }
+  ]
+}

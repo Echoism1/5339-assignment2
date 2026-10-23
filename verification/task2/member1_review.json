@@ -1,0 +1,414 @@
+{
+  "base_commit": "2d99c516d65503e0ebe0118e33f6c8bc20ba7b39",
+  "files_reviewed": 32,
+  "manifest": [
+    {
+      "path": ".gitattributes",
+      "bytes": 28,
+      "sha256": "feff07ffe8f8001c95eb096897a83b709ca9f8ea712b988966b69580360cbe38",
+      "baseline_sha256": "6d84c3e41442942985197dda7ccef3a558820ff8f6592b77337fc442a46e99ac",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 166,
+      "sha256": "93abb3a82ff6b2ca0eec83e9032162ad3942541b40a885c2f23dd120c0184d64",
+      "baseline_sha256": "38b998703afcda91c42d37d3458c45b56e3fca6cc9c7ce9f19a1b7984ac649d0",
+      "changed_since_handoff_ignoring_newlines": true
+    },
+    {
+      "path": "COMP5339_2026s2_Assignment2_data _generator/README.md",
+      "bytes": 4510,
+      "sha256": "103a1f7a06e3ef2d9e97746cc81413ed8c790c1f814bf64a816e438a6d011578",
+      "baseline_sha256": "9eb63c56d73c0864bc83233a3982c38da253ffb4fc6e418d7bf04665306c903d",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "COMP5339_2026s2_Assignment2_data _generator/demo_stations.csv",
+      "bytes": 1201,
+      "sha256": "52ce0d202409e0342f280d69c7550f0d2e4a2f51f3c2b3b9a3b6bb00c6e02f7e",
+      "baseline_sha256": "52ce0d202409e0342f280d69c7550f0d2e4a2f51f3c2b3b9a3b6bb00c6e02f7e",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 20,
+      "columns": [
+        "station_id",
+        "name",
+        "lat",
+        "lon",
+        "site_type",
+        "connectors",
+        "max_kw"
+      ]
+    },
+    {
+      "path": "COMP5339_2026s2_Assignment2_data _generator/generate_dataset.py",
+      "bytes": 13479,
+      "sha256": "53c20447ad7cb5f63183d884ddf8e4c4791669e129460582076e36f09eae03ab",
+      "baseline_sha256": "c712946967f80667f5b9af6429fd8afaff83a1b9ce7e170b272edbafd496387a",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "COMP5339_2026s2_Assignment2_data _generator/requirements.txt",
+      "bytes": 144,
+      "sha256": "2b81ba0c4e87d3fe0d6d2c0991c402c8694cdc38dfd20a21ce00ff1d366698e1",
+      "baseline_sha256": "216f075d45fcfa28c53014539f6c0b24b02d355d959c9af6d3df4f54de13a4c2",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "README.md",
+      "bytes": 27261,
+      "sha256": "dbf139de2c0b97338526d0c0515d9900bd20dc98e4f1fc68bf86325303a8781b",
+      "baseline_sha256": "065dfdbe386c320805a3794ff2d38d27c445d2bca19df4facaf89e18cd29e97d",
+      "changed_since_handoff_ignoring_newlines": true
+    },
+    {
+      "path": "build_events.py",
+      "bytes": 4653,
+      "sha256": "fd1937f443e80ea75b788618f065985a2938b6c646d9b1d1543bee8d4a806938",
+      "baseline_sha256": "b88ae0b748765ea4d042b114ac618d567d96492e86f2d9e115c443175ab985f0",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "data/a1_chargers.csv",
+      "bytes": 931916,
+      "sha256": "44c0c71c8f8c3a5885c09f5e3a585b7c68881e2230554274072894fbbfebbe6b",
+      "baseline_sha256": "44c0c71c8f8c3a5885c09f5e3a585b7c68881e2230554274072894fbbfebbe6b",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 1958,
+      "columns": [
+        "OBJECTID",
+        "Station_name",
+        "Station_address",
+        "Operator",
+        "Number_of_plugs",
+        "Charger_Type",
+        "Charger_rating",
+        "Latitude",
+        "Longitude",
+        "LGANAME",
+        "PCODE",
+        "Source",
+        "ev_id",
+        "station_name_missing",
+        "objectid_missing",
+        "lga_missing",
+        "pcode_missing",
+        "source_missing",
+        "pcode_clean",
+        "pcode_was_malformed",
+        "operator_clean",
+        "power_kw",
+        "power_kw_min",
+        "rating_format",
+        "rating_is_compound",
+        "rating_was_invalid",
+        "rating_missing_unit",
+        "plugs_count",
+        "is_upcoming",
+        "is_exact_duplicate",
+        "same_location_size",
+        "same_location_group",
+        "longitude_gda2020",
+        "latitude_gda2020",
+        "sa4_code",
+        "sa4_name",
+        "sa4_state_code",
+        "sa4_state_name",
+        "sa4_gcc_name",
+        "sa4_match_method",
+        "sa4_match_distance_m",
+        "aug_operator_clean",
+        "aug_coordinate_group",
+        "aug_match_status",
+        "aug_match_reason",
+        "aug_ocm_retrieved",
+        "aug_site_augmentation_success",
+        "aug_operator_augmentation_success",
+        "aug_augmentation_success",
+        "aug_candidate_keys_json",
+        "aug_plug_types_json",
+        "aug_usage_type",
+        "aug_membership_required",
+        "aug_pricing_text",
+        "aug_bay_count",
+        "aug_vehicle_access",
+        "aug_operator_website",
+        "aug_operator_contact_phone",
+        "aug_operator_contact_email",
+        "aug_attribute_conflicts_json",
+        "aug_input_address_conflict",
+        "aug_reviewed",
+        "aug_input_sha256",
+        "aug_rules_sha256",
+        "aug_candidate_sha256"
+      ]
+    },
+    {
+      "path": "data/aemo_cache/PRICE_AND_DEMAND_202609_NSW1.csv",
+      "bytes": 396276,
+      "sha256": "85af3e1f68823c3eef87fcc98e5fa605c609b568ec64d6ef36b96722f8db8cd0",
+      "baseline_sha256": "85af3e1f68823c3eef87fcc98e5fa605c609b568ec64d6ef36b96722f8db8cd0",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 8640,
+      "columns": [
+        "REGION",
+        "SETTLEMENTDATE",
+        "TOTALDEMAND",
+        "RRP",
+        "PERIODTYPE"
+      ]
+    },
+    {
+      "path": "data/assumptions.csv",
+      "bytes": 584,
+      "sha256": "bf70976e8fada0dde0f9eaf28d97fc87d13c1feae6b21f5caa8dd564303c703e",
+      "baseline_sha256": "bf70976e8fada0dde0f9eaf28d97fc87d13c1feae6b21f5caa8dd564303c703e",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 6,
+      "columns": [
+        "ev_id",
+        "charger_type",
+        "original_rating",
+        "max_kw",
+        "reason"
+      ]
+    },
+    {
+      "path": "data/prices_hourly.csv",
+      "bytes": 384765,
+      "sha256": "fd639163b8740eb95dd0364dbec2348d8812d752e13dd197df8c546350852019",
+      "baseline_sha256": "fd639163b8740eb95dd0364dbec2348d8812d752e13dd197df8c546350852019",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 10392,
+      "columns": [
+        "ts",
+        "station_id",
+        "price_per_kwh",
+        "wholesale_per_kwh"
+      ]
+    },
+    {
+      "path": "data/session_metering.csv",
+      "bytes": 9604568,
+      "sha256": "f22366544b0210b704421b05b84da7167eb1eea568bc5edc00be258d49426a43",
+      "baseline_sha256": "f22366544b0210b704421b05b84da7167eb1eea568bc5edc00be258d49426a43",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 118030,
+      "columns": [
+        "ts",
+        "type",
+        "station_id",
+        "connector_id",
+        "session_id",
+        "voltage_v",
+        "current_a",
+        "power_kw",
+        "energy_kwh",
+        "soc_pct"
+      ]
+    },
+    {
+      "path": "data/sessions.csv",
+      "bytes": 537073,
+      "sha256": "b4b3e59e81d4220c80b99ec39b0e2f7094f76d9ba66c92021735d0648bd0a201",
+      "baseline_sha256": "b4b3e59e81d4220c80b99ec39b0e2f7094f76d9ba66c92021735d0648bd0a201",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 3906,
+      "columns": [
+        "session_id",
+        "station_id",
+        "connector_id",
+        "site_type",
+        "vehicle_model",
+        "start_ts",
+        "charge_end_ts",
+        "end_ts",
+        "charge_minutes",
+        "energy_kwh",
+        "avg_kw",
+        "peak_kw",
+        "price_per_kwh",
+        "cost_aud"
+      ]
+    },
+    {
+      "path": "data/stations.csv",
+      "bytes": 37767,
+      "sha256": "9ea1a1a339ddcd9e5c4b5de42cd2b6c1f4b7a3a937262fd0ce4755e6fca68557",
+      "baseline_sha256": "9ea1a1a339ddcd9e5c4b5de42cd2b6c1f4b7a3a937262fd0ce4755e6fca68557",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 433,
+      "columns": [
+        "station_id",
+        "name",
+        "lat",
+        "lon",
+        "site_type",
+        "connectors",
+        "max_kw",
+        "base_price"
+      ]
+    },
+    {
+      "path": "data/stations_input.csv",
+      "bytes": 35623,
+      "sha256": "f2d179e612e7d8404dc222e8314bb929bb53cb7f0965cb09c93912cb77697e48",
+      "baseline_sha256": "f2d179e612e7d8404dc222e8314bb929bb53cb7f0965cb09c93912cb77697e48",
+      "changed_since_handoff_ignoring_newlines": false,
+      "rows": 433,
+      "columns": [
+        "station_id",
+        "name",
+        "lat",
+        "lon",
+        "site_type",
+        "connectors",
+        "max_kw"
+      ]
+    },
+    {
+      "path": "data/window.jsonl",
+      "bytes": 666507,
+      "sha256": "607e637a57df7160f5c98d6cf0057dc141e6af7eb2a2c902ba0156bb458fc00d",
+      "baseline_sha256": "607e637a57df7160f5c98d6cf0057dc141e6af7eb2a2c902ba0156bb458fc00d",
+      "changed_since_handoff_ignoring_newlines": false,
+      "events": 2452
+    },
+    {
+      "path": "data/window_summary.json",
+      "bytes": 386,
+      "sha256": "fe42fabd52e0cff972b3655848ebf472c4dc32fcad7176b7c2a72493d80c4e5d",
+      "baseline_sha256": "41c11ea658ecbcaf62a44a5c77813a4450673f567fb16f6c8f187c7dc4daec76",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "prepare_data.py",
+      "bytes": 2905,
+      "sha256": "3ee78fa8c9d67b0687745bd7cc77a1cea95899e320018d27628b8ee1b12860a1",
+      "baseline_sha256": "852803378154ce7aa825ac0db5eefd2ee121022356adae093d254d85b4ded72e",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "publisher.py",
+      "bytes": 3114,
+      "sha256": "37074e276f8f895c21a78d16eea789e32f2b9615234dd6bc7646baccd4d8ea18",
+      "baseline_sha256": "f8e3c29aa8b62e14e8f0143fa64a973e7ba3bc8fe0cfcf5563cb203732dec486",
+      "changed_since_handoff_ignoring_newlines": true
+    },
+    {
+      "path": "report_member1.md",
+      "bytes": 5813,
+      "sha256": "cf95eb5a5eb2471ad2370fdb0aba19898e2e02a14564d7d54f35bed45d277924",
+      "baseline_sha256": "88a41a7acc2c074f7bd4c2d5eae2c0cfb3b594d8f94a8853799d615da3217c22",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 47,
+      "sha256": "6b4ea5642f178857242ddb09bfe3396b040506ac188f9e31ca986434adb11f30",
+      "baseline_sha256": "86373a1cba103ebb9c560f2d18bcf42559f01c9341edee7add4302dcdeb15e09",
+      "changed_since_handoff_ignoring_newlines": true
+    },
+    {
+      "path": "verification/data_checks.json",
+      "bytes": 1880,
+      "sha256": "c134b87b1426ee34309dbe5b6df42305cc1ac3b3ec18ebfbf979bc94a3de4005",
+      "baseline_sha256": "319f0a7a2c3c92677db4e7500e862d6ae6452b89e819240763f9f15a15f56717",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/data_validation.log",
+      "bytes": 857,
+      "sha256": "9d02b495d988e0b1b5bf322b13d2ed2a785bae750c7a89405dad3708efbad51f",
+      "baseline_sha256": "889fc25db05dede9f28da5bb656c4a505a238cb0c42b38e276b845007fe6ee0a",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/generation.log",
+      "bytes": 284,
+      "sha256": "e297f9850e661edc0f2065757f61b727b9015964aee608f87c2ea8dee7882e6d",
+      "baseline_sha256": "b6d05ff179a0cba20055a3b969f4b8dbbd2635295685dfefdfc2bbfcd00a9185",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/generation_resources.txt",
+      "bytes": 943,
+      "sha256": "61456a064136a111139aab8af86d419ec5be950fca2b85ad391f964446973b3c",
+      "baseline_sha256": "367236f8505cdda92a7607dd298c58319c0f3c77bf7d637782728ed062e4eb50",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/generator.patch",
+      "bytes": 1527,
+      "sha256": "303e0eceb973ccd340c42fd5750ec12a7386c494702fd9e74efd3f23ddfff58e",
+      "baseline_sha256": "b98dd900c2bdf67b78fd16607ee2ae363caa6eefe5933fdfc0b9ab5a14a0dab4",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/mqtt.json",
+      "bytes": 496,
+      "sha256": "c63b1aba7802f03af4b250255061ce4f21e27d8d2cfe9097398780bbb2137644",
+      "baseline_sha256": "c5851c72dd6f6c380a6774ad9cf0e16f32965f8090d628788d3e907747b7af9c",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/mqtt_check.log",
+      "bytes": 590,
+      "sha256": "3a18edfe71c4355b111ef631487c9587303b1db8fd99725c9fef494fe21e68a2",
+      "baseline_sha256": "b3c2cc972db80f2f0f4fa43f8a71a25b6d12e527e9d5c0c6730a435f9bbdaaea",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/mqtt_publisher.log",
+      "bytes": 343,
+      "sha256": "a3ea90b0b5b9e037696f234e80476fd45b8cca5ae254cc47a23ac6459c1e23d3",
+      "baseline_sha256": "00dae42d79e7f19c49926cbfc6108b140efafca011108477c1e2e85d51376980",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/window_build.log",
+      "bytes": 386,
+      "sha256": "fe42fabd52e0cff972b3655848ebf472c4dc32fcad7176b7c2a72493d80c4e5d",
+      "baseline_sha256": "41c11ea658ecbcaf62a44a5c77813a4450673f567fb16f6c8f187c7dc4daec76",
+      "changed_since_handoff_ignoring_newlines": false
+    },
+    {
+      "path": "verification/window_resources.txt",
+      "bytes": 783,
+      "sha256": "4227c7a0e479ab790418f14736061cf75467573bdecdb49aceb24854441c19bd",
+      "baseline_sha256": "31622be5f9b9dcf8c41e54734c9da63ea160b9b7eca7ef0ca10a7061d3489690",
+      "changed_since_handoff_ignoring_newlines": false
+    }
+  ],
+  "replay_rebuilt_equal": true,
+  "inherited_checksums_match_after_newline_normalisation": true,
+  "windows_checkout_newline_only_differences": [
+    "data/window_summary.json"
+  ],
+  "event_counts": {
+    "price_update": 433,
+    "session_start": 71,
+    "meter": 1886,
+    "session_end": 62
+  },
+  "summary": {
+    "start": "2026-09-01T00:00:00+10:00",
+    "end": "2026-09-01T03:00:00+10:00",
+    "hours": 3,
+    "stations": 433,
+    "counts": {
+      "price_update": 433,
+      "session_start": 71,
+      "meter": 1886,
+      "session_end": 62
+    },
+    "total": 2452
+  },
+  "findings": [
+    "Member 1 covers assignment tasks 1 and 2; group member 2 owns subscription.",
+    "Main contains an A1 CSV snapshot but no A1 DuckDB database.",
+    "Three-hour window has no price changes after initial prices; occupancy and meter curves must demonstrate dynamics.",
+    "Nine sessions remain active; do not synthesise end events.",
+    "Original verification scripts were not included; review_member1.py and Task 2 tests add reproducible checks."
+  ]
+}

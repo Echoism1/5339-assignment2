@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "fresh_full_mqtt_replay_events": 2452,
+  "fresh_replay_all_payloads_and_a1_joins_match": true,
+  "packaged_database_unchanged_and_verified": true,
+  "runtime_and_clean_environment_unit_tests": 8,
+  "mqtt_fault_and_recovery_checks": [
+    "retained quarantine",
+    "malformed quarantine",
+    "wrong topic ignored",
+    "escaped invalid Unicode quarantined without writer failure",
+    "QoS 1 duplicates",
+    "broker restart and resubscription",
+    "subscriber restart and durable dedup",
+    "exact saved payloads",
+    "bounded queue overflow fails visibly",
+    "replay after overflow recovers all events"
+  ],
+  "handoff_sql_row_counts": [
+    433,
+    9,
+    433,
+    1886
+  ],
+  "minimum_publish_interval_seconds": 0.10046220000367612,
+  "scope": "Member 2 MQTT subscription, decoding and same-schema A1 integration",
+  "downstream_group_work_remaining": [
+    "derived session/state analytics and final query optimisation",
+    "live read service or snapshot interface",
+    "dynamic map, popups and active-session live curves",
+    "integrated group report and submission package"
+  ]
+}

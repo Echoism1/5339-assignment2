@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "example_row_counts": [
+    433,
+    9,
+    433,
+    1886
+  ],
+  "completed_sessions_sum": 62,
+  "all_433_dc_stations_have_received_price": true
+}
