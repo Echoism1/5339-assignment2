@@ -1,1 +1,1 @@
-"""Member 2: validated, durable MQTT ingestion."""
+"""Check incoming MQTT messages and save them to the database."""

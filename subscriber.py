@@ -1,4 +1,4 @@
-"""Subscribe to member 1's stream; commit valid events or quarantine before ACK."""
+"""Receive MQTT messages and confirm them after saving valid or rejected events."""
 import argparse
 import json
 import logging
@@ -13,6 +13,7 @@ from pathlib import Path
 import paho.mqtt.client as mqtt
 
 from ingestion.storage import Store, initialise
+from analytics.queries import publish_snapshot
 
 LOG = logging.getLogger('subscriber')
 
@@ -38,11 +39,39 @@ def run(args):
     def writer():
         try:
             with Store(args.db) as store:
+                snapshot_path = getattr(args, 'snapshot', None)
+                interval = getattr(args, 'snapshot_interval', 1.0)
+                last_snapshot = 0
+                snapshot_failed = False
+
+                def export_snapshot():
+                    nonlocal last_snapshot, snapshot_failed
+                    if not snapshot_path:
+                        return
+                    try:
+                        publish_snapshot(store.db, snapshot_path)
+                    except OSError as exc:
+                        if not snapshot_failed:
+                            LOG.warning('Snapshot unavailable; database writes continue: %s', exc)
+                        snapshot_failed = True
+                    else:
+                        if snapshot_failed:
+                            LOG.info('Snapshot publishing recovered')
+                        snapshot_failed = False
+                    finally:
+                        last_snapshot = time.monotonic()
+
+                export_snapshot()
                 ready.set()
                 while True:
-                    item = pending.get()
+                    try:
+                        item = pending.get(timeout=interval)
+                    except queue.Empty:
+                        export_snapshot()
+                        continue
                     try:
                         if item is None:
+                            export_snapshot()
                             return
                         epoch, mid, topic, payload, retained, qos = item
                         outcome = store.receive(topic, payload, retained, qos)
@@ -54,6 +83,8 @@ def run(args):
                             if state['connected'] and epoch == state['epoch']:
                                 if client.ack(mid, qos) != mqtt.MQTT_ERR_SUCCESS:
                                     LOG.warning('ACK failed; broker may redeliver %s', mid)
+                        if snapshot_path and time.monotonic() - last_snapshot >= interval:
+                            export_snapshot()
                         if sum(counters.values()) % 250 == 0:
                             LOG.info('committed outcomes=%s queue=%d', dict(counters), pending.qsize())
                     finally:
@@ -111,10 +142,13 @@ def run(args):
     for sig in (signal.SIGINT, signal.SIGTERM):
         signal.signal(sig, lambda *_: stop.set())
     started = time.monotonic()
+    stop_file = getattr(args, 'stop_file', None)
     try:
         client.connect_async(args.host, args.port, keepalive=30)
         client.loop_start()
         while not stop.wait(0.2):
+            if stop_file and stop_file.exists():
+                break
             if args.run_seconds and time.monotonic() - started >= args.run_seconds:
                 break
     except (OSError, RuntimeError) as exc:
@@ -145,7 +179,7 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
-    init = sub.add_parser('init', help='copy the real A1 database and add inbox DDL')
+    init = sub.add_parser('init', help='copy the A1 database and add the A2 event and analysis tables')
     init.add_argument('--a1-db', type=Path, required=True)
     init.add_argument('--db', type=Path, default=Path('database/assignment2.duckdb'))
     listen = sub.add_parser('listen')
@@ -157,13 +191,16 @@ def main():
     listen.add_argument('--queue-size', type=int, default=512)
     listen.add_argument('--run-seconds', type=float, default=0, help='0 means until Ctrl+C')
     listen.add_argument('--summary', type=Path)
+    listen.add_argument('--stop-file', type=Path, help='stop and finish queued writes when this file appears')
+    listen.add_argument('--snapshot', type=Path, default=Path('runtime/dashboard.json'))
+    listen.add_argument('--snapshot-interval', type=float, default=1.0)
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
     if args.command == 'init':
         initialise(args.a1_db, args.db)
         LOG.info('Initialised %s from unchanged A1 database', args.db)
         return 0
-    if (args.queue_size < 1 or not math.isfinite(args.run_seconds) or args.run_seconds < 0 or not args.client_id
+    if (not math.isfinite(args.snapshot_interval) or args.snapshot_interval <= 0 or args.queue_size < 1 or not math.isfinite(args.run_seconds) or args.run_seconds < 0 or not args.client_id
             or not 1 <= args.port <= 65535 or not args.topic
             or any(c in args.topic for c in '+#\0')):
         parser.error('use a positive queue/port, stable client ID and exact event topic')

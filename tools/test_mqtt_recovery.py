@@ -1,7 +1,6 @@
-"""Real-broker recovery tests in scratch DBs; never alter the submitted replay DB."""
+"""Test MQTT recovery using temporary database copies and a local broker."""
 import argparse
 import json
-import socket
 import subprocess
 import sys
 import time
@@ -14,21 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 
 
-def wait_for(predicate, timeout=20):
-    end = time.monotonic() + timeout
-    while time.monotonic() < end:
-        if predicate():
-            return
-        time.sleep(0.1)
-    raise TimeoutError('test condition timed out')
-
-
-def port_ready(port):
-    try:
-        with socket.create_connection(('127.0.0.1', port), timeout=0.2):
-            return True
-    except OSError:
-        return False
+sys.path.insert(0, str(ROOT))
+from tools.runtime import Processes, port_ready, wait_for
 
 
 def publish(port, topic, messages, retain=False):
@@ -48,8 +34,9 @@ def publish(port, topic, messages, retain=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--a1-db', required=True)
+    parser.add_argument('--output-dir', type=Path, default=ROOT/'verification/task2')
     args = parser.parse_args()
-    scratch = ROOT / 'verification/task2/scratch'
+    scratch = args.output_dir / 'scratch'
     scratch.mkdir(parents=True, exist_ok=True)
     run = scratch / str(time.time_ns())
     run.mkdir()
@@ -58,24 +45,21 @@ def main():
     events = (ROOT / 'data/window.jsonl').read_text(encoding='utf-8').splitlines()
     db = run / 'recovery.duckdb'
     subprocess.run([PYTHON, 'subscriber.py', 'init', '--a1-db', args.a1_db, '--db', str(db)], cwd=ROOT, check=True)
-    handles, children = [], []
+    group = Processes(run)
 
-    def start(command, log):
-        handle = (run / log).open('w', encoding='utf-8')
-        handles.append(handle)
-        process = subprocess.Popen([PYTHON, *command], cwd=ROOT, stdout=handle, stderr=subprocess.STDOUT)
-        children.append(process)
-        return process
+    def start(command, log, stop_file=None):
+        return group.launch(Path(log).stem, command, stop_file=stop_file)
 
     def broker():
-        process = start(['tools/dev_broker.py', '--port', str(port)], f'broker-{len(children)}.log')
+        process = start(['tools/dev_broker.py', '--port', str(port)], f'broker-{len(group.processes)}.log')
         wait_for(lambda: port_ready(port))
         return process
 
     def listen(seconds, name):
         process = start(['subscriber.py', 'listen', '--db', str(db), '--port', str(port),
                          '--topic', topic, '--client-id', 'task2-recovery', '--run-seconds', str(seconds),
-                         '--summary', str(run / f'{name}.json')], f'{name}.log')
+                         '--snapshot', str(run/'dashboard.json'),
+                         '--summary', str(run / f'{name}.json')], f'{name}.log', run/f'{name}.stop')
         wait_for(lambda: 'READY' in (run / f'{name}.log').read_text(encoding='utf-8'))
         return process
 
@@ -118,7 +102,8 @@ def main():
         )
         slow = start(['-c', snippet, 'listen', '--db', str(db), '--port', str(port),
                       '--topic', topic, '--client-id', 'task2-recovery', '--queue-size', '1',
-                      '--run-seconds', '6'], 'overflow.log')
+                      '--run-seconds', '6', '--snapshot', str(run/'dashboard.json')],
+                     'overflow.log', run/'overflow.stop')
         wait_for(lambda: 'READY' in (run / 'overflow.log').read_text(encoding='utf-8'))
         publish(port, topic, events[20:40])
         assert slow.wait(15) == 1
@@ -135,16 +120,11 @@ def main():
                               'QoS 1 duplicates', 'broker restart and resubscription',
                               'subscriber restart and durable dedup', 'exact saved payloads',
                               'bounded queue overflow fails visibly', 'replay after overflow recovers all events'],
-                      scratch=str(run.relative_to(ROOT)))
-        (ROOT / 'verification/task2/recovery_verification.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+                      scratch=str(run.resolve()))
+        (args.output_dir / 'recovery_verification.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
         print(json.dumps(result, indent=2))
     finally:
-        for process in children:
-            if process.poll() is None:
-                process.terminate()
-                process.wait(10)
-        for handle in handles:
-            handle.close()
+        group.close()
 
 
 if __name__ == '__main__':

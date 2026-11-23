@@ -18,7 +18,7 @@ def rows(path):
 
 
 def timestamp(value):
-    """Official CSV times are naive; use our fixed +10:00 simulation convention."""
+    """CSV times have no time zone; add UTC+10 for this simulation."""
     return datetime.fromisoformat(value).replace(tzinfo=ZONE).isoformat()
 
 

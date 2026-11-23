@@ -1,19 +1,6 @@
--- ==============================================================================
--- USYD CODE CITATION ACKNOWLEDGEMENT
--- I declare that the following assistance was received in this file:
--- - Generative AI assistance: Anthropic Claude 5.5 Opus was consulted in a limited
---   assistive capacity for reviewing relational DDL syntax and constraint definitions.
--- - Team implementation: All 3NF relational schemas, primary/foreign keys, check
---   constraints, and table architectures were independently designed and verified by
---   TUT19-AssignmentGroup-08:
---   Rao Fu (520310746), Yicheng Xie (540610813), Haoran Lu (550118350), Yuanyuan Wang (541012696).
--- ==============================================================================
-
--- Complete Task 4 DDL. Run once in a NEW empty DuckDB database.
--- Install spatial for this platform/version before running.
-
--- COMP5339 Task 4. Execute in a NEW database; load with build_storage.py.
--- Requires DuckDB 1.5.5 and its platform-specific spatial extension.
+-- Original A1 table definitions for reference.
+-- Normal A2 runs use the included database and do not execute this file.
+-- To recreate empty A1 tables, use a new database with the spatial extension installed.
 LOAD spatial;
 SET geometry_always_xy = true;
 SET TimeZone = 'UTC';
@@ -128,7 +115,7 @@ CREATE TABLE audit.build_metadata (
     metadata_value JSON NOT NULL
 );
 
--- Exact typed handoff snapshot, intentionally denormalized for audit.
+-- Keep the original input values in typed columns for later comparison.
 CREATE TABLE audit.input_snapshot (
     "OBJECTID" VARCHAR,
     "Station_name" VARCHAR,

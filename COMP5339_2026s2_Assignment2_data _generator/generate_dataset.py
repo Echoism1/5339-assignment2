@@ -7,7 +7,7 @@ Produces three time-series files for a set of charging stations:
   sessions.csv           one row per charging session (start, end, kWh, peak/avg kW, vehicle, ...)
   session_metering.csv   one row per meter event of a charging session (session, voltage, current, kW, kWh, SoC%)
   
-Calibration sources (see README.md):
+Calibration sources used by the supplied generator:
   - ARENA / Energeia "Insights from Ultra-Fast Charging Network Data" (Aug 2023), Evie + Chargefox data:
       avg session 2023: urban 27.3 min / 27.0 kWh, regional 25.9 min / 24.5 kWh;
       majority of starts mid-day; urban weekday evening (6-10pm) bump; weekends ~ weekdays.
@@ -17,8 +17,8 @@ Calibration sources (see README.md):
 
 Only the Python standard library is used.
 
-Example:
-  python generate_dataset.py --stations demo_stations.csv --start 2026-10-01 --days 14 --out data
+Example from the project root:
+  python "COMP5339_2026s2_Assignment2_data _generator/generate_dataset.py" --stations data/stations_input.csv --start 2026-09-01 --days 1 --seed 5339 --sessions-per-connector-day 3 2 --out data
 """
 import argparse
 import csv
@@ -170,7 +170,7 @@ def simulate_session(rng, st, conn_id, sess_id, t0, price, args):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--stations", default="demo_stations.csv")
+    ap.add_argument("--stations", required=True, help="Path to the station input CSV")
     ap.add_argument("--start", default="2026-10-01")
     ap.add_argument("--days", type=int, default=14)
     ap.add_argument("--region", default="NSW1")

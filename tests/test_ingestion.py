@@ -73,16 +73,17 @@ class ContractTests(unittest.TestCase):
 
 class PersistenceTests(unittest.TestCase):
     def test_durable_dedup_quarantine_and_fk(self):
-        # Supply an A1 snapshot independently, not the production DB while it is open.
+        # Work on a copy; an external A1 database can be supplied if available.
         import os
-        source = os.environ.get('A1_TEST_DB')
-        if not source:
-            self.skipTest('set A1_TEST_DB to a closed A1 database')
+        source = os.environ.get('A1_TEST_DB') or ROOT / 'database/assignment2.duckdb'
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / 'test.duckdb'
             shutil.copy2(source, target)
             payload = (ROOT / 'data/window.jsonl').read_bytes().splitlines()[0]
             with Store(target) as store:
+                for table in ('meter_reading', 'current_price', 'charging_session',
+                              'mqtt_event', 'mqtt_rejection'):
+                    store.db.execute(f'DELETE FROM core.{table}')
                 self.assertEqual(store.receive('test/events', payload), 'stored')
                 self.assertEqual(store.receive('test/events', payload), 'duplicate')
                 self.assertEqual(store.receive('test/events', b'\xff'), 'rejected')

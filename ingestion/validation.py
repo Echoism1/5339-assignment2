@@ -1,4 +1,4 @@
-"""Validate the producer's exact v1 wire contract without coercing identifiers."""
+"""Check the message fields and their types without changing IDs."""
 import hashlib
 import json
 import math
